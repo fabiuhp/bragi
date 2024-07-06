@@ -29,7 +29,10 @@ var (
 
 func Test_Create_Campaign(t *testing.T) {
 	assert := assert.New(t)
-	service := Service{}
+	repositoryMock := new(repositoryMock)
+	repositoryMock.On("Save", mock.Anything).Return(nil)
+
+	service := Service{Repository: repositoryMock}
 
 	id, err := service.Create(newCampaign)
 
