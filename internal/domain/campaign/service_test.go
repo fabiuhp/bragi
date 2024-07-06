@@ -2,6 +2,8 @@ package campaign
 
 import (
 	"bragi/internal/contract"
+	"bragi/internal/internalerrors"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -61,4 +63,15 @@ func Test_Create_ValidateDomainError(t *testing.T) {
 
 	assert.NotNil(err)
 	assert.Equal("nome é obrigatório", err.Error())
+}
+
+func Test_Create_ValidateRepositorySave(t *testing.T) {
+	assert := assert.New(t)
+	repositoryMock := new(repositoryMock)
+	repositoryMock.On("Save", mock.Anything).Return(errors.New("error to save on database"))
+	service := Service{Repository: repositoryMock}
+
+	_, err := service.Create(newCampaign)
+
+	assert.True(errors.Is(err, internalerrors.ErrInternal))
 }

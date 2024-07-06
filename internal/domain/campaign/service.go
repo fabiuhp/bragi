@@ -2,6 +2,7 @@ package campaign
 
 import (
 	"bragi/internal/contract"
+	"bragi/internal/internalerrors"
 )
 
 type Service struct {
@@ -13,6 +14,9 @@ func (s *Service) Create(newCampaign contract.NewCampaign) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	s.Repository.Save(campaign)
+	err = s.Repository.Save(campaign)
+	if err != nil {
+		return "", internalerrors.ErrInternal
+	}
 	return campaign.ID, nil
 }
