@@ -67,7 +67,7 @@ func Test_Create_ValidateDomainError(t *testing.T) {
 	_, err := service.Create(invalidCampaignName)
 
 	assert.NotNil(err)
-	assert.Equal("nome é obrigatório", err.Error())
+	assert.Equal("Name is required with min 5", err.Error())
 }
 
 func Test_Create_ValidateRepositorySave(t *testing.T) {

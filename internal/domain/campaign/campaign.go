@@ -1,7 +1,7 @@
 package campaign
 
 import (
-	"errors"
+	"bragi/internal/internalerrors"
 	"time"
 
 	"github.com/rs/xid"
@@ -20,28 +20,22 @@ type Campaign struct {
 }
 
 func NewCampaign(name string, content string, emails []string) (*Campaign, error) {
-	if name == "" {
-		return nil, errors.New("nome é obrigatório")
-	}
-
-	if content == "" {
-		return nil, errors.New("conteudo é obrigatório")
-	}
-
-	if len(emails) == 0 {
-		return nil, errors.New("contatos são obrigatórios")
-	}
-
 	contacts := make([]Contact, len(emails))
 	for index, email := range emails {
 		contacts[index].Email = email
 	}
 
-	return &Campaign{
+	campaign := &Campaign{
 		ID:        xid.New().String(),
 		Name:      name,
 		Content:   content,
 		CreatedOn: time.Now(),
 		Contacts:  contacts,
-	}, nil
+	}
+
+	err := internalerrors.ValidateStruct(campaign)
+	if err == nil {
+		return campaign, nil
+	}
+	return nil, err
 }

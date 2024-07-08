@@ -17,7 +17,7 @@ func main() {
 		validationErrors := err.(validator.ValidationErrors)
 
 		for _, v := range validationErrors {
-			println(v.Error())
+			println(v.StructField() + " is invalid: " + v.Tag())
 		}
 	}
 }
